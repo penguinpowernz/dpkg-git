@@ -1,0 +1,16 @@
+Package: dpkg-git
+Version: 0.1.8-alpha
+Section: admin
+Priority: optional
+Architecture: all
+Essential: no
+Depends: git-core dpkg-deb
+Installed-Size: 20
+Maintainer: Robert McLeod <robert.mcleod@itpeople.co.nz>
+Homepage: <none>
+Description: Installs a debian package from a git source repo
+  * clones the repo
+  * deletes the .git stuff
+  * clears the root folder
+  * builds a package from it
+  * installs the package

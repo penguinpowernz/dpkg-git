@@ -1,0 +1,84 @@
+#!/bin/bash
+
+usage() {
+  echo "Usage: dpkg-git <-i> <repo_address>"
+  echo "  dpkg-git -i user@example.com:path/to/repo.git"
+  echo "  dpkg-git -i https://example.com/path/to/repo.git"
+}
+
+log() {
+  MSG=$1;
+  DATE=`date +%d-%m-%Y %H%Mh%S`;
+  echo "$DATE : $MSG" > tee -a $LOG;
+}
+
+fail_if_cmd_failed() {
+  if [ "$?" != "0" ]; then
+    log $1;
+    exit 5;
+  fi;
+}
+
+if [ "$UID" != "0" ]; then
+  echo "Root required...";
+  exit 8;
+fi;
+
+# only -i works for now
+if [ "$1" != "-i" ]; then
+  echo "$1 not supported";
+  exit 1;
+fi;
+
+REPO="$2";
+REPO_NAME=`echo "$REPO"|cut -d':' -f2|tr -s '@:/.' '_'`;
+CACHE="/var/cache/dpkg/git/"
+LOG="/var/log/dpkg/git.log";
+BUILD_PATH="$CACHE/src/$REPO_NAME";
+
+# Clone it
+log "Cloning $REPO to $BUILD_PATH";
+git clone "$REPO" "$BUILD_PATH";
+fail_if_cmd_failed "Git clone failed ($?)... exiting";
+
+# Hide the git dir
+GIT_DIR="$BUILD_PATH/.git";
+GIT_WORK_TREE="$BUILD_PATH";
+mv "$BUILD_PATH/.git" "$CACHE/dirs/$REPO_NAME";
+
+export GIT_DIR;
+export GIT_WORK_TREE;
+
+# Get info about the package from the build dir
+SHA=`git log|head -n 1|cut -d' ' -f2|head -c 8`;
+PACKAGE=`cat $BUILD_PATH/DEBIAN/control|grep "Package"|cut -d':' -f2|tr -d ' '`;
+VERSION=`cat $BUILD_PATH/DEBIAN/control|grep "Version"|cut -d':' -f2|tr -d ' '`;
+ARCH=`cat $BUILD_PATH/DEBIAN/control|grep "Architec"|cut -d':' -f2|tr -d ' '`;
+VERSION="$VERSION-git${SHA}"
+PACKAGE_NAME="${PACKAGE}_${VERSION}_$ARCH";
+PACKAGE_PATH="$CACHE/debs/$PACKAGE_NAME.deb";
+
+# Change the version number in the control file
+cat "$BUILD_PATH/DEBIAN/control"|sed "s/^Version: .*$/^Version: $VERSION/" > "/tmp/control";
+mv "/tmp/control" "$BUILD_PATH/DEBIAN/control"
+
+# Build the package
+dpkg-deb -b $REPO_PATH $PACKAGE_PATH;
+fail_if_cmd_failed "ERROR: failed to build package $PACKAGE"; 
+
+# Install the package
+log "Install $PACKAGE_NAME from $REPO";
+dpkg -i $PACKAGE_PATH;
+
+# Might need to sort dependencies
+if [ "$?" != "0" ]; then
+  log "Trying to install dependencies for $PACKAGE_NAME";
+  apt-get install -f;
+  fail_if_cmd_failed "ERROR: failed to install dependencies";
+fi;
+
+# Check if it actually installed
+if [ "$(dpkg -l $PACKAGE | grep $SHA | wc -l)" == "0" ]; then
+  log "ERROR: $PACKAGE was not installed";
+  exit 1;
+fi;
