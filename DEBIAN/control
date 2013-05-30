@@ -1,10 +1,10 @@
 Package: dpkg-git
-Version: 0.1.8-alpha
+Version: 1.0
 Section: admin
 Priority: optional
 Architecture: all
 Essential: no
-Depends: git-core dpkg-deb
+Depends: git-core
 Installed-Size: 20
 Maintainer: Robert McLeod <robert.mcleod@itpeople.co.nz>
 Homepage: <none>
