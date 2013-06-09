@@ -12,6 +12,9 @@ usage() {
       contain valid Debian control files
       
       /path/to/repo
+      git://github.com/penguinpowernz/dpkg-git.git
+      https://github.com/penguinpowernz/dpkg-git.git
+      http://github.com/penguinpowernz/dpkg-git.git
 
   Path:
       The path refers to a place in which to save
@@ -22,15 +25,24 @@ usage() {
 }
 
 BIN="/usr/share/dpkg-git/bin";
-
 ACTION=$1;
-SRCDIR=$2;
+
+# Clone the repo first, if it is a cloneable path
+if [ "$(echo "$2"|grep -P "^http[s]?://|^git://"|wc -l)" = "1" ]; then
+  TMP="/tmp/src/$(basename $2)";
+  git clone "$2" "$TMP";
+  SRCDIR="$TMP";
+else
+  SRCDIR="$2";
+fi;
 
 case "$ACTION" in
   "-i")
     deb="$($BIN/dpkg-git-build.sh "$SRCDIR" /var/cache/dpkg-git/debs)";
-    dpkg -i $deb;
+    sudo dpkg -i $deb;
     ;;
   "-b") $BIN/dpkg-git-build.sh "$SRCDIR" "$3";;
   *) usage ;;
 esac;
+
+exit 0;
