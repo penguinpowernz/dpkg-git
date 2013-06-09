@@ -4,21 +4,35 @@ usage() {
   echo "Usage: dpkg-git <action> <repo> [path]
 
   Actions:
-      -i      install the package from the path
-      -b      build the package from the path
+    -i      install the package from the path
+    -b      build the package from the path
 
   Repo:
-      The repo is a local repository but it must 
-      contain valid Debian control files
-      
-      /path/to/repo
-      git://github.com/penguinpowernz/dpkg-git.git
-      https://github.com/penguinpowernz/dpkg-git.git
-      http://github.com/penguinpowernz/dpkg-git.git
+    
+    This is the path to the repository from which
+    to install from.  If the repository has valid 
+    Debain control files it will be installed to
+    the dpkg system.
+
+    /path/to/repo
+    git://github.com/penguinpowernz/dpkg-git.git
+    https://github.com/penguinpowernz/dpkg-git.git
+    http://github.com/penguinpowernz/dpkg-git.git
 
   Path:
-      The path refers to a place in which to save
-      the debian file to (-b only)
+
+    The path refers to a place in which to save
+    the debian file to (-b only)
+
+  Examples:
+
+    Install a git repository into the dpkg system:
+
+      dpkg-git -i https://github.com/penguinpowernz/porter.git
+
+    Build a .deb package from a git repository:
+
+      dpkg-git -b https://github.com/penguinpowernz/porter.git
 
 "
 
