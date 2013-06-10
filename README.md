@@ -3,7 +3,23 @@ dpkg-git
 
 A Debian package to allow installing from a git repository with valid Debian control files.
 
+## What is this?
+
+This is a command that can build and/or install Debian from a git repository, local or remote.
+
+### Remote repos
+
+For remote repositories it will clone them into `/tmp/src` before running any operations.
+
+### Building repos
+
+When building a repo it will remove any files from the root directory (usually stuff like LICENCE or README files) and put them in `usr/doc/<package-name>`.  It will of course remove all git files/folders before building.  This is to ensure a clean root directory, while also allowing repos to contain README files in their for sites like Github and Bitbucket.
+
+When using `-b` the deb package will be dropped in the current directory, and when using `-i` it will be dropped into `/tmp/`.
+
 ## How to install
+
+It's not in a repo yet so run these commands:
 
 ```sh
 wget http://penguinpowernz.github.io/dpkg-git/dpkg-git_latest.deb;
