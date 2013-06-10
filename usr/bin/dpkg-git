@@ -44,6 +44,8 @@ ACTION=$1;
 # Clone the repo first, if it is a cloneable path
 if [ "$(echo "$2"|grep -P "^http[s]?://|^git://"|wc -l)" = "1" ]; then
   TMP="/tmp/src/$(basename $2)";
+  TMP=${TMP%.git};
+  rm -fr $TMP;
   git clone "$2" "$TMP";
   SRCDIR="$TMP";
 else
@@ -52,8 +54,8 @@ fi;
 
 case "$ACTION" in
   "-i")
-    deb="$($BIN/dpkg-git-build.sh "$SRCDIR" /var/cache/dpkg-git/debs)";
-    sudo dpkg -i $deb;
+    deb="$($BIN/dpkg-git-build.sh "$SRCDIR" /tmp)";
+    sudo dpkg -i /tmp/$deb;
     ;;
   "-b") $BIN/dpkg-git-build.sh "$SRCDIR" "$3";;
   *) usage ;;
