@@ -22,7 +22,7 @@ When using `-b` the deb package will be dropped in the current directory, and wh
 It's not in a repo yet so run these commands:
 
 ```sh
-wget http://penguinpowernz.github.io/dpkg-git/dpkg-git_latest.deb;
+wget http://penguinpowernz.github.io/dpkg-git/downloads/dpkg-git_latest.deb;
 sudo dpkg -i dpkg-git_latest.deb;
 ```
 
