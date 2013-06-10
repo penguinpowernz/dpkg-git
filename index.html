@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>dpkg-git by penguinpowernz</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>dpkg-git</h1>
+          <h2>A Debian package to allow installing from a git repository with valid Debian control files.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/penguinpowernz/dpkg-git/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/penguinpowernz/dpkg-git/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/penguinpowernz/dpkg-git" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="dpkg-git" class="anchor" href="#dpkg-git"><span class="octicon octicon-link"></span></a>dpkg-git</h1>
+
+<p>A Debian package to allow installing from a git repository with valid Debian control files.</p>
+
+<h2>
+<a name="what-is-this" class="anchor" href="#what-is-this"><span class="octicon octicon-link"></span></a>What is this?</h2>
+
+<p>This is a command that can build and/or install Debian from a git repository, local or remote.</p>
+
+<h3>
+<a name="remote-repos" class="anchor" href="#remote-repos"><span class="octicon octicon-link"></span></a>Remote repos</h3>
+
+<p>For remote repositories it will clone them into <code>/tmp/src</code> before running any operations.</p>
+
+<h3>
+<a name="building-repos" class="anchor" href="#building-repos"><span class="octicon octicon-link"></span></a>Building repos</h3>
+
+<p>When building a repo it will remove any files from the root directory (usually stuff like LICENCE or README files) and put them in <code>usr/doc/&lt;package-name&gt;</code>.  It will of course remove all git files/folders before building.  This is to ensure a clean root directory, while also allowing repos to contain README files in their for sites like Github and Bitbucket.</p>
+
+<p>When using <code>-b</code> the deb package will be dropped in the current directory, and when using <code>-i</code> it will be dropped into <code>/tmp/</code>.</p>
+
+<h2>
+<a name="how-to-install" class="anchor" href="#how-to-install"><span class="octicon octicon-link"></span></a>How to install</h2>
+
+<p>It's not in a repo yet so run these commands:</p>
+
+<div class="highlight"><pre>wget http://penguinpowernz.github.io/dpkg-git/dpkg-git_latest.deb;
+sudo dpkg -i dpkg-git_latest.deb;
+</pre></div>
+
+<h2>
+<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
+
+<p>Build a package from a local repository:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>dpkg-git -b my-cool-repo.git
+my-cool-repo_1.0_all.deb
+</pre></div>
+
+<p>Build a package from a github repo:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>dpkg-git -b https://github.com/penguinpowernz/dork-detector.git                                                                               4 ↵
+Cloning into <span class="s1">'/tmp/src/dork-detector'</span>...
+remote: Counting objects: 23, <span class="k">done</span>.
+remote: Compressing objects: 100% <span class="o">(</span>17/17<span class="o">)</span>, <span class="k">done</span>.
+remote: Total 23 <span class="o">(</span>delta 1<span class="o">)</span>, reused 20 <span class="o">(</span>delta 0<span class="o">)</span>
+Unpacking objects: 100% <span class="o">(</span>23/23<span class="o">)</span>, <span class="k">done</span>.
+dork-detector_0.1_all.deb
+</pre></div>
+
+<p>Install a package from a local repo:</p>
+
+<div class="highlight"><pre>dpkg-git -i iprules 
+<span class="o">(</span>Reading database ... 127358 files and directories currently installed.<span class="o">)</span>
+Preparing to replace iprules 1.0.2 <span class="o">(</span>using /tmp/iprules_1.1_all.deb<span class="o">)</span> ...
+Unpacking replacement iprules ...
+Setting up iprules <span class="o">(</span>1.1<span class="o">)</span> ...
+Do you want to install default rules? <span class="o">[</span>y<span class="o">]</span>es,<span class="o">[</span>N<span class="o">]</span>o,<span class="o">[</span>o<span class="o">]</span>verwrite: n
+You can find default rules in /usr/share/iprules/rules/
+</pre></div>
+
+<p>Install a package from a github repo:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>dpkg-git -i https://github.com/penguinpowernz/dork-detector.git
+Cloning into <span class="s1">'/tmp/src/dork-detector'</span>...
+remote: Counting objects: 23, <span class="k">done</span>.
+remote: Compressing objects: 100% <span class="o">(</span>17/17<span class="o">)</span>, <span class="k">done</span>.
+remote: Total 23 <span class="o">(</span>delta 1<span class="o">)</span>, reused 20 <span class="o">(</span>delta 0<span class="o">)</span>
+Unpacking objects: 100% <span class="o">(</span>23/23<span class="o">)</span>, <span class="k">done</span>.
+Selecting previously unselected package dork-detector.
+<span class="o">(</span>Reading database ... 127351 files and directories currently installed.<span class="o">)</span>
+Unpacking dork-detector <span class="o">(</span>from /tmp/dork-detector_0.1_all.deb<span class="o">)</span> ...
+Setting up dork-detector <span class="o">(</span>0.1<span class="o">)</span> ...
+/usr/bin/gcc
+Building dump_cdorked_config...
+</pre></div>
+
+<p>Install a package from a github repo (with failing dependencies):</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>dpkg-git -i https://github.com/penguinpowernz/observium-agent.git
+Cloning into <span class="s1">'/tmp/src/observium-agent'</span>...
+remote: Counting objects: 140, <span class="k">done</span>.
+remote: Compressing objects: 100% <span class="o">(</span>107/107<span class="o">)</span>, <span class="k">done</span>.
+remote: Total 140 <span class="o">(</span>delta 35<span class="o">)</span>, reused 102 <span class="o">(</span>delta 16<span class="o">)</span>
+Receiving objects: 100% <span class="o">(</span>140/140<span class="o">)</span>, 59.07 KiB | 74 KiB/s, <span class="k">done</span>.
+Resolving deltas: 100% <span class="o">(</span>35/35<span class="o">)</span>, <span class="k">done</span>.
+Selecting previously unselected package observium-agent.
+<span class="o">(</span>Reading database ... 127311 files and directories currently installed.<span class="o">)</span>
+Unpacking observium-agent <span class="o">(</span>from .../observium-agent_0.1.0-alpha_all.deb<span class="o">)</span> ...
+dpkg: dependency problems prevent configuration of observium-agent:
+ observium-agent depends on xinetd; however:
+  Package xinetd is not installed.
+ observium-agent depends on check-mk-agent; however:
+  Package check-mk-agent is not installed.
+
+dpkg: error processing observium-agent <span class="o">(</span>--install<span class="o">)</span>:
+ dependency problems - leaving unconfigured
+Errors were encountered <span class="k">while </span>processing:
+ observium-agent
+</pre></div>
+        </section>
+
+        <footer>
+          dpkg-git is maintained by <a href="https://github.com/penguinpowernz">penguinpowernz</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
