@@ -63,7 +63,34 @@ sudo dpkg -i dpkg-git_latest.deb;
 </pre></div>
 
 <h2>
-<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
+<a name="how-to-use-as-a-git-command" class="anchor" href="#how-to-use-as-a-git-command"><span class="octicon octicon-link"></span></a>How to use as a git command</h2>
+
+<p>Simply run `git deb` from inside the repo you want to package up:</p>
+
+<div class="highlight"><pre>
+<span class="nv">$ </span> pwd
+/home/me/src/myrepo
+<span class="nv">$ </span> ls -la
+.git
+DEBIAN
+README.md
+<span class="nv">$ </span> git deb
+/home/me/src/myrepo_0.1_all.deb
+</pre></div>
+
+<p>It saves it to the parent directory so you don't dirty your repo.</p>
+
+<p>Or specify a folder to package:</p>
+
+<div class="highlight"><pre>
+<span class="nv">$ </span> git deb myrepo
+myrepo_0.1_all.deb
+</pre></div>
+
+<p>Easy!</p>
+
+<h2>
+<a name="how-to-use-as-a-dpkg-command" class="anchor" href="#how-to-use-as-a-dpkg-command"><span class="octicon octicon-link"></span></a>How to use as a dpkg command</h2>
 
 <p>Build a package from a local repository:</p>
 
