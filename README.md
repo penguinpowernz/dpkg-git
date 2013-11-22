@@ -26,7 +26,33 @@ wget http://penguinpowernz.github.io/dpkg-git/downloads/dpkg-git_latest.deb;
 sudo dpkg -i dpkg-git_latest.deb;
 ```
 
-## How to use
+## How to use as a git command
+
+Simply run `git deb` from inside the repo you want to package up:
+
+```sh
+$ pwd
+/home/me/src/myrepo
+$ ls -la
+.git
+DEBIAN
+README.md
+$ git deb
+/home/me/src/myrepo_0.1_all.deb
+```
+
+It saves it to the parent directory so you don't dirty your repo.
+
+Or specify a folder to package:
+
+```sh
+$ git deb myrepo
+myrepo_0.1_all.deb
+```
+
+Easy!
+
+## How to use as a dpkg command
 
 Build a package from a local repository:
 

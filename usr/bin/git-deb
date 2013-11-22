@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Build from the current dir
+if [ -z "$1" ]; then
+  [[ ! -d ".git" ]] && echo "This is not a git repo... (specify the folder to build the deb from)" && exit 1;
+  SOURCE_DIR="$(pwd)";
+  TARGET_DIR="$(dirname $SOURCE_DIR)";
+  FILENAME="$(dpkg-git -b $SOURCE_DIR $TARGET_DIR)";
+  echo "$TARGET_DIR/$FILENAME";
+else
+  # Build from the given dir
+  dpkg-git -b $1;
+fi;
