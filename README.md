@@ -76,7 +76,7 @@ dork-detector_0.1_all.deb
 Install a package from a local repo:
 
 ```sh
-dpkg-git -i iprules 
+dpkg-git -i iprules
 (Reading database ... 127358 files and directories currently installed.)
 Preparing to replace iprules 1.0.2 (using /tmp/iprules_1.1_all.deb) ...
 Unpacking replacement iprules ...
@@ -125,4 +125,13 @@ dpkg: error processing observium-agent (--install):
  dependency problems - leaving unconfigured
 Errors were encountered while processing:
  observium-agent
+```
+
+## Changing the Architecture on the fly
+
+You can change the architecture on the fly simply by setting `ARCH=` before running it:
+
+```
+$ ARCH=armhf dpkg-git -b dork-detector
+dork-detector_1.0_armhf.deb
 ```

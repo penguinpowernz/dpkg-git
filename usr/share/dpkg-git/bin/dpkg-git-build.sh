@@ -24,13 +24,16 @@ pkgname="$(grep 'Package:' $control|cut -d' ' -f2)";
 version="$(grep "Version:" $control|cut -d' ' -f2)";
 arch="$(grep "Architec" $control|cut -d' ' -f2)";
 
+# allow to set the architecture from externally, changes the Architecture of the package
+[[ -z $ARCH ]] || arch=$ARCH;
+
 # Move root files to the doc folder
 mkdir -p "$tmpdir/usr/share/doc/$pkgname-$version";
 find $tmpdir -maxdepth 1 -type f -exec mv {} "$tmpdir/usr/share/doc/$pkgname-$version" \;
 
-# Change the version in the control file
-cat "$control"|sed "s/^Version: .*$/Version: $version/" > "$control.new";
-mv "$control.new" "$control";
+# MODIFY THE CONTROL FILE
+sed -i "s/^Version: .*$/Version: $version/" $control        # change the version in the control file
+sed -i "s/^Architecture: .*$/Architecture: $arch/" $control # change the arch in the control file
 
 # Give the control directory the correct permissions
 chmod 755 "$tmpdir/DEBIAN" -R;
