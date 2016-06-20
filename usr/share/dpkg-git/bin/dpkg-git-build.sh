@@ -1,43 +1,43 @@
 #!/bin/bash
 
-SRCDIR=${1%/}; # remove trailing slash
-DEBPATH="$2";
+srcdir=${1%/}; # remove trailing slash
+debpath="$2";
 
-BASENAME="$(basename $SRCDIR)";
-TMPDIR="/tmp/dpkg-git/$BASENAME";
-CONTROL="$TMPDIR/DEBIAN/control";
+basename="$(basename $srcdir)";
+tmpdir="/tmp/dpkg-git/$basename";
+control="$tmpdir/DEBIAN/control";
 
 # Copy the path to the cache
-rm -fr $TMPDIR;
-mkdir -p $TMPDIR;
-rsync -ra "$SRCDIR/" $TMPDIR --exclude-from="/usr/share/dpkg-git/excludes";
+rm -fr $tmpdir;
+mkdir -p $tmpdir;
+rsync -ra "$srcdir/" $tmpdir --exclude-from="/usr/share/dpkg-git/excludes";
 
 # Check that the control file exists
-if ! [ -e "$CONTROL" ]; then
-  echo "No control file in $CONTROL";
+if ! [ -e "$control" ]; then
+  echo "No control file in $control";
   echo "Is this even a debian package?";
   exit 1;
 fi;
 
 # Get information from the control file
-PKGNAME="$(grep 'Package:' $CONTROL|cut -d' ' -f2)";
-VERSION="$(grep "Version:" $CONTROL|cut -d' ' -f2)";
-ARCH="$(grep "Architec" $CONTROL|cut -d' ' -f2)";
+pkgname="$(grep 'Package:' $control|cut -d' ' -f2)";
+version="$(grep "Version:" $control|cut -d' ' -f2)";
+arch="$(grep "Architec" $control|cut -d' ' -f2)";
 
 # Move root files to the doc folder
-mkdir -p "$TMPDIR/usr/share/doc/$PKGNAME-$VERSION";
-find $TMPDIR -maxdepth 1 -type f -exec mv {} "$TMPDIR/usr/share/doc/$PKGNAME-$VERSION" \;
+mkdir -p "$tmpdir/usr/share/doc/$pkgname-$version";
+find $tmpdir -maxdepth 1 -type f -exec mv {} "$tmpdir/usr/share/doc/$pkgname-$version" \;
 
 # Change the version in the control file
-cat "$CONTROL"|sed "s/^Version: .*$/Version: $VERSION/" > "$CONTROL.new";
-mv "$CONTROL.new" "$CONTROL";
+cat "$control"|sed "s/^Version: .*$/Version: $version/" > "$control.new";
+mv "$control.new" "$control";
 
 # Give the control directory the correct permissions
-chmod 755 "$TMPDIR/DEBIAN" -R;
+chmod 755 "$tmpdir/DEBIAN" -R;
 
 # Build the deb from the directory
-DEBNAME="${PKGNAME}_${VERSION}_$ARCH.deb";
-[[ $DEBPATH != "" ]] && DEBPATH="$DEBPATH/$DEBNAME";
-[[ $DEBPATH = "" ]] && DEBPATH="$(pwd)/$DEBNAME";
-dpkg-deb -b $TMPDIR $DEBPATH > /dev/null;
+DEBNAME="${pkgname}_${version}_$arch.deb";
+[[ $debpath != "" ]] && debpath="$debpath/$DEBNAME";
+[[ $debpath = "" ]] && debpath="$(pwd)/$DEBNAME";
+dpkg-deb -b $tmpdir $debpath > /dev/null;
 echo $DEBNAME;
