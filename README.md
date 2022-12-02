@@ -1,6 +1,8 @@
 dpkg-git
 ========
 
+**ARCHIVED: I wrote a better tool called `ian` see https://github.com/penguinpowernz/go-ian**
+
 A Debian package to allow installing from a git repository with valid Debian control files.
 
 ## What is this?
